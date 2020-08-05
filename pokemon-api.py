@@ -53,6 +53,28 @@ def not_found(error):
 #    return make_response(jsonify({'error': 'METHOD NOT ALLOWED'}), 405)
 
 
+## Obtention d'un pokemon selon son id
+########################################################
+@app.route('/pokemons/<string:task_id>', methods=['GET'])
+def get_task(task_id):
+#   json_lookup = path+"/json_"+task_id+".json"
+#   if not os.path.exists(json_lookup):
+#        abort(404)
+#   if os.path.isdir(json_lookup):
+#        abort(404)
+#   file_desc = open(json_lookup, "r")
+#
+#   datas = json.load(file_desc)
+#
+#   file_desc.close()
+#   return jsonify({'task': datas})
+
+#    datas = [ { "id": 1, "nom": "pikachu", "type": "elec" },{ "id": 2, "nom": "bulbizzare", "type": "eau" } ]
+    datas = { "id": 1, "nom": "pikachu", "type": "elec" }
+    return jsonify(datas)
+
+
+
 
 ## Obtention liste des pokemons
 ########################################################
