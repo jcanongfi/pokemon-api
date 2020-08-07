@@ -20,10 +20,11 @@ sudo yum install -y python-virtualenv
 ```bash
 git clone https://github.com/jcanongfi/pokemon-api.git
 cd pokemon-api
-virtualenv flask
+virtualenv-3 flask
 flask/bin/pip install --upgrade pip
 flask/bin/pip install flask
 flask/bin/pip install flask_httpauth
+flask/bin/pip install pyyaml
 chmod u+x pokemon-api.py
 ```
 

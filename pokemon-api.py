@@ -10,6 +10,7 @@ import os, fnmatch
 import re
 import datetime
 import json
+import yaml
 
 
 ## Initialisation flask
@@ -57,21 +58,28 @@ def not_found(error):
 ########################################################
 @app.route('/pokemons/<string:task_id>', methods=['GET'])
 def get_task(task_id):
-#   json_lookup = path+"/json_"+task_id+".json"
-#   if not os.path.exists(json_lookup):
-#        abort(404)
-#   if os.path.isdir(json_lookup):
-#        abort(404)
-#   file_desc = open(json_lookup, "r")
-#
-#   datas = json.load(file_desc)
-#
-#   file_desc.close()
-#   return jsonify({'task': datas})
-
+   file_lookup = path+"/"+task_id+".poke"
+   nom = ""
+   famille = ""
+   if not os.path.exists(file_lookup):
+     abort(404)
+   if os.path.isdir(file_lookup):
+     abort(404)
+   poke_file = open(file_lookup, "r")
+   poke_yml=yaml.load(poke_file,Loader=yaml.FullLoader)
+   try:
+     nom = (poke_yml['nom'])
+   except KeyError:
+     abort(404)
+   try:
+     famille = (poke_yml['type'])
+   except KeyError:
+     abort(404)
+   poke_file.close()
 #    datas = [ { "id": 1, "nom": "pikachu", "type": "elec" },{ "id": 2, "nom": "bulbizzare", "type": "eau" } ]
-    datas = { "id": 1, "nom": "pikachu", "type": "elec" }
-    return jsonify(datas)
+#   datas = { "id": task_id , "nom": "pikachu", "type": "elec" }
+   datas = { "id": task_id, "nom": nom, "type": famille }
+   return jsonify(datas)
 
 
 
@@ -81,10 +89,13 @@ def get_task(task_id):
 @app.route('/pokemons', methods=['GET'])
 def get_pokemons():
 #    json_list = []
-#    listOfFiles = os.listdir(path)
-#    pattern = "*.poke"
-#    for entry in listOfFiles:
-#      if fnmatch.fnmatch(entry, pattern):
+    listOfFiles = os.listdir(path)
+    pattern = "*.poke"
+    print("toto")
+    for entry in listOfFiles:
+      print(entry)
+      if fnmatch.fnmatch(entry, pattern):
+        print(entry)
 #
 #            try:
 #              found = re.search('json_(.+?).json', entry).group(1)
@@ -119,7 +130,7 @@ def create_pokemon():
 #        'description': request.json.get('description', ""),
 #        'done': False
 #    }
-    print request.json 
+    print(request.json) 
     pokemon = {
         'id': 1,
         'nom': request.json['nom'],
