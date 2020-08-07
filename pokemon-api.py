@@ -93,12 +93,10 @@ def get_pokemons():
     pattern = "*.poke"
     for entry in listOfFiles:
       if fnmatch.fnmatch(entry, pattern):
-        print(entry)
         try:
           found = re.search('(.+?).poke', entry).group(1)
         except AttributeError:
           abort(400)
-        print(found)
         poke_list.append(get_poke_file(found))
     return jsonify(poke_list)
 
@@ -148,5 +146,4 @@ def index():
 ########################################################
 if __name__ == '__main__':
     app.run(debug=True,host='0.0.0.0',port='8888')
-
 
