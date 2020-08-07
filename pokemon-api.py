@@ -23,7 +23,6 @@ auth = HTTPBasicAuth()
 ########################################################
 path = "/tmp/pokemon-api"
 access_rights = 0o700
-seq = 1
 
 if os.path.exists(path) and not os.path.isdir(path):
   print(" * Deleting %s file..." % path)
@@ -110,30 +109,26 @@ def get_pokemons():
 def create_pokemon():
     if not request.json or not 'nom' in request.json or not 'type' in request.json:
         abort(400)
- #TODO# Tester precence/existence du fichier
-#    print seq
-#    seq = seq + 1
-#    print seq
-#    filename = path+"/json_"+timestamp+".json"
-#    new_fichier = open(filename, "w")
-#    new_fichier.write(json.dumps(request.json, indent=4))
-#    new_fichier.close()
-#    task = {
-#        'id': timestamp,
-#        'title': request.json['title'],
-#        'description': request.json.get('description', ""),
-#        'done': False
-#    }
-    print(request.json) 
+# Todo : creer/utiliser un objet sequence pour eviter de redecouvrir
+    seq = 0
+    exists = True
+    while exists:
+      seq = seq + 1
+      file_lookup = path+"/"+str(seq)+".poke"
+      try:
+        poke_file = open(file_lookup, "r")
+      except FileNotFoundError:
+        exists = False
+    poke_file.close()
     pokemon = {
-        'id': 1,
+        'id': seq,
         'nom': request.json['nom'],
         'type': request.json['type']
     }
-#    return jsonify({'pokemon': pokemon}), 201
+    poke_file = open(file_lookup, "w")
+    yaml.dump(pokemon, poke_file)
+    poke_file.close()
     return jsonify(pokemon), 201
-#    return jsonify({'task': task}), 201
-
 
 
 ## Page de vivacite
@@ -146,7 +141,7 @@ def health():
 ########################################################
 @app.route('/')
 def index():
-    return "pokemon-api\nAccepted methods :\nGET /pokemons\nPOST /pokemon\nGET /health\n"
+    return "pokemon-api\nAccepted methods :\nGET /pokemons\nGET /pokemons/<id>\nPOST /pokemon\nGET /health\n"
 
 
 ## Lancement de l'API
