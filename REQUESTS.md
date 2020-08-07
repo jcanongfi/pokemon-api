@@ -1,15 +1,15 @@
 # Get all pokemons
 
 ```bash
-curl localhost:8888/pokemons
-curl -s localhost:8888/pokemons | jq
+curl localhost:8888/pokemon
+curl -s localhost:8888/pokemon | jq
 ```
 
 # Get one pokemon by id
 
 ```bash
-curl -s localhost:8888/pokemons/1
-curl -s localhost:8888/pokemons/1 | jq
+curl -s localhost:8888/pokemon/1
+curl -s localhost:8888/pokemon/1 | jq
 ```
 
 # Create one pokemon 
