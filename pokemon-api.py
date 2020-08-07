@@ -76,8 +76,8 @@ def get_poke_file(id):
 
 ## Obtention d'un pokemon selon son id
 ########################################################
-@app.route('/pokemons/<string:id>', methods=['GET'])
-def get_task(id):
+@app.route('/pokemon/<string:id>', methods=['GET'])
+def get_pokemon_id(id):
    datas = get_poke_file(id)
    return jsonify(datas)
 
@@ -86,8 +86,8 @@ def get_task(id):
 
 ## Obtention liste des pokemons
 ########################################################
-@app.route('/pokemons', methods=['GET'])
-def get_pokemons():
+@app.route('/pokemon', methods=['GET'])
+def get_pokemon():
     poke_list = []
     listOfFiles = os.listdir(path)
     pattern = "*.poke"
@@ -139,7 +139,7 @@ def health():
 ########################################################
 @app.route('/')
 def index():
-    return "pokemon-api\nAccepted methods :\nGET /pokemons\nGET /pokemons/<id>\nPOST /pokemon\nGET /health\n"
+    return "pokemon-api\nAccepted methods :\nGET /pokemon\nGET /pokemon/<id>\nPOST /pokemon\nGET /health\n"
 
 
 ## Lancement de l'API
