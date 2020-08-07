@@ -53,12 +53,8 @@ def not_found(error):
 #def not_found(error):
 #    return make_response(jsonify({'error': 'METHOD NOT ALLOWED'}), 405)
 
-
-## Obtention d'un pokemon selon son id
-########################################################
-@app.route('/pokemons/<string:task_id>', methods=['GET'])
-def get_task(task_id):
-   file_lookup = path+"/"+task_id+".poke"
+def get_poke_file(id):
+   file_lookup = path+"/"+id+".poke"
    nom = ""
    famille = ""
    if not os.path.exists(file_lookup):
@@ -76,9 +72,14 @@ def get_task(task_id):
    except KeyError:
      abort(404)
    poke_file.close()
-#    datas = [ { "id": 1, "nom": "pikachu", "type": "elec" },{ "id": 2, "nom": "bulbizzare", "type": "eau" } ]
-#   datas = { "id": task_id , "nom": "pikachu", "type": "elec" }
-   datas = { "id": task_id, "nom": nom, "type": famille }
+   return { "id": id, "nom": nom, "type": famille }
+   
+
+## Obtention d'un pokemon selon son id
+########################################################
+@app.route('/pokemons/<string:id>', methods=['GET'])
+def get_task(id):
+   datas = get_poke_file(id)
    return jsonify(datas)
 
 
@@ -88,26 +89,19 @@ def get_task(task_id):
 ########################################################
 @app.route('/pokemons', methods=['GET'])
 def get_pokemons():
-#    json_list = []
+    poke_list = []
     listOfFiles = os.listdir(path)
     pattern = "*.poke"
-    print("toto")
     for entry in listOfFiles:
-      print(entry)
       if fnmatch.fnmatch(entry, pattern):
         print(entry)
-#
-#            try:
-#              found = re.search('json_(.+?).json', entry).group(1)
-#            except AttributeError:
-#              found = 'Error' # apply your error handling
-##            print(found)
-#            json_list.append(found)
-#            #json_list.append(entry)
-##    return jsonify({'pokemons': json_list})
-#    json_list = [ { "id": 1, "nom": "pikachu", "type": "elec" } ]
-    json_list = [ { "id": 1, "nom": "pikachu", "type": "elec" },{ "id": 2, "nom": "bulbizzare", "type": "eau" } ]
-    return jsonify(json_list)
+        try:
+          found = re.search('(.+?).poke', entry).group(1)
+        except AttributeError:
+          abort(400)
+        print(found)
+        poke_list.append(get_poke_file(found))
+    return jsonify(poke_list)
 
 
 ## Creation d'un nouveau pokemon
