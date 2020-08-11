@@ -79,6 +79,7 @@ def get_poke_file(id):
 
 ## Obtention d'un pokemon selon son id
 ########################################################
+# TODO : id doit etre de type int (et non pas string)
 @app.route('/pokemon/<string:id>', methods=['GET'])
 def get_pokemon_id(id):
    datas = get_poke_file(id)
@@ -136,12 +137,28 @@ def create_pokemon():
     return jsonify(pokemon), 200
 
 
-## TODO : Page d'update
+## TODO : Finir Page d'update
+## Update un nouveau pokemon
+########################################################
+@app.route('/pokemon/<int:id>', methods=['PUT'])
+def update_pokemon(id):
+    datas = get_poke_file(id)
+    return jsonify(datas)
+#    if not request.json:
+#        abort(400)
+#    if 'title' in request.json and type(request.json['title']) != unicode:
+#        abort(400)
+#    if 'description' in request.json and type(request.json['description']) is not unicode:
+#        abort(400)
+#    if 'done' in request.json and type(request.json['done']) is not bool:
+#        abort(400)
+#    task[0]['title'] = request.json.get('title', task[0]['title'])
+#    task[0]['description'] = request.json.get('description', task[0]['description'])
+#    task[0]['done'] = request.json.get('done', task[0]['done'])
+#    return jsonify({'task': task[0]})
 
 
-
-## TODO : Page de delete
-## Delete d'un nouveau pokemon
+## Delete un nouveau pokemon
 ########################################################
 @app.route('/pokemon/<int:id>', methods=['DELETE'])
 def delete_pokemon(id):
