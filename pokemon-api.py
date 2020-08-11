@@ -141,7 +141,17 @@ def create_pokemon():
 
 
 ## TODO : Page de delete
-
+## Delete d'un nouveau pokemon
+########################################################
+@app.route('/pokemon/<int:id>', methods=['DELETE'])
+def delete_pokemon(id):
+   file_lookup = path+"/"+str(id)+".poke"
+   if not os.path.exists(file_lookup):
+     abort(404)
+   if os.path.isdir(file_lookup):
+     abort(404)
+   os.remove(file_lookup)
+   return jsonify({'result': True})
 
 
 
