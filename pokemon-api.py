@@ -52,6 +52,9 @@ def not_found(error):
 #def not_found(error):
 #    return make_response(jsonify({'error': 'METHOD NOT ALLOWED'}), 405)
 
+
+## Internal : Obtention json d'un pokemon selon son id
+########################################################
 def get_poke_file(id):
    file_lookup = path+"/"+id+".poke"
    nom = ""
@@ -105,7 +108,9 @@ def get_pokemon():
 ########################################################
 @app.route('/pokemon', methods=['POST'])
 def create_pokemon():
-    if not request.json or not 'nom' in request.json or not 'type' in request.json:
+    if not request.json:
+        abort(400)
+    if not 'nom' in request.json or not 'type' in request.json:
         abort(400)
 # Todo : creer/utiliser un objet sequence pour eviter de redecouvrir
     seq = 0
@@ -126,7 +131,18 @@ def create_pokemon():
     poke_file = open(file_lookup, "w")
     yaml.dump(pokemon, poke_file)
     poke_file.close()
-    return jsonify(pokemon), 201
+#    return jsonify(pokemon), 201
+# Hack pour plugin terraform pokemon api : code retour 200
+    return jsonify(pokemon), 200
+
+
+## TODO : Page d'update
+
+
+
+## TODO : Page de delete
+
+
 
 
 ## Page de vivacite
