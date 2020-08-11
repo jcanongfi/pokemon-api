@@ -25,3 +25,15 @@ curl -s -H "Content-Type: application/json" -X POST -d '{"nom": "Pikachu", "type
 curl -s -X DELETE localhost:8888/pokemon/1
 ```
 
+# Update a pokemon
+
+## Full update 
+
+```bash
+curl -s -X PUT -H "Content-Type: application/json" -d '{"nom": "Pikachu", "type": "elec"}' localhost:8888/pokemon/6 | jq
+```
+
+## Partial update
+
+TODO
+

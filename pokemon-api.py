@@ -56,7 +56,7 @@ def not_found(error):
 ## Internal : Obtention json d'un pokemon selon son id
 ########################################################
 def get_poke_file(id):
-   file_lookup = path+"/"+id+".poke"
+   file_lookup = path+"/"+str(id)+".poke"
    nom = ""
    famille = ""
    if not os.path.exists(file_lookup):
@@ -74,13 +74,13 @@ def get_poke_file(id):
    except KeyError:
      abort(404)
    poke_file.close()
-   return { "id": int(id), "nom": nom, "type": famille }
+   return { "id": id, "nom": nom, "type": famille }
    
 
 ## Obtention d'un pokemon selon son id
 ########################################################
 # TODO : id doit etre de type int (et non pas string)
-@app.route('/pokemon/<string:id>', methods=['GET'])
+@app.route('/pokemon/<int:id>', methods=['GET'])
 def get_pokemon_id(id):
    datas = get_poke_file(id)
    return jsonify(datas)
@@ -101,7 +101,7 @@ def get_pokemon():
           found = re.search('(.+?).poke', entry).group(1)
         except AttributeError:
           abort(400)
-        poke_list.append(get_poke_file(found))
+        poke_list.append(get_poke_file(int(found)))
     return jsonify(poke_list)
 
 
@@ -142,33 +142,47 @@ def create_pokemon():
 ########################################################
 @app.route('/pokemon/<int:id>', methods=['PUT'])
 def update_pokemon(id):
-    datas = get_poke_file(id)
-    return jsonify(datas)
-#    if not request.json:
+    if not request.json:
+        abort(400)
+    if not 'nom' in request.json or not 'type' in request.json:
+        abort(400)
+# TODO : Verifier si le fichier existe, sinon erreur 404
+    filename = path+"/"+str(id)+".poke"
+    if not os.path.exists(filename):
+       abort(404)
+    if os.path.isdir(filename):
+       abort(404)
+
+#    if 'nom' in request.json and type(request.json['nom']) != unicode:
+#        print("nom pas unicode")
 #        abort(400)
-#    if 'title' in request.json and type(request.json['title']) != unicode:
+#    if 'type' in request.json and type(request.json['type']) is not unicode:
+#        print("type pas unicode")
 #        abort(400)
-#    if 'description' in request.json and type(request.json['description']) is not unicode:
-#        abort(400)
-#    if 'done' in request.json and type(request.json['done']) is not bool:
-#        abort(400)
-#    task[0]['title'] = request.json.get('title', task[0]['title'])
-#    task[0]['description'] = request.json.get('description', task[0]['description'])
-#    task[0]['done'] = request.json.get('done', task[0]['done'])
-#    return jsonify({'task': task[0]})
+    pokemon = {
+        'id': id,
+        'nom': request.json['nom'],
+        'type': request.json['type']
+    }
+# TODO : Ecraser le fichier <id>.poke par le nouveau
+#    pokemon = get_poke_file(id)
+    poke_file = open(filename, "w")
+    yaml.dump(pokemon, poke_file)
+    poke_file.close()
+    return jsonify(pokemon)
 
 
 ## Delete un nouveau pokemon
 ########################################################
 @app.route('/pokemon/<int:id>', methods=['DELETE'])
 def delete_pokemon(id):
-   file_lookup = path+"/"+str(id)+".poke"
-   if not os.path.exists(file_lookup):
-     abort(404)
-   if os.path.isdir(file_lookup):
-     abort(404)
-   os.remove(file_lookup)
-   return jsonify({'result': True})
+    filename = path+"/"+str(id)+".poke"
+    if not os.path.exists(filename):
+       abort(404)
+    if os.path.isdir(filename):
+       abort(404)
+    os.remove(filename)
+    return jsonify({'result': True})
 
 
 
