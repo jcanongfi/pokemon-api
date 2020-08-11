@@ -74,7 +74,7 @@ def get_poke_file(id):
    except KeyError:
      abort(404)
    poke_file.close()
-   return { "id": id, "nom": nom, "type": famille }
+   return { "id": int(id), "nom": nom, "type": famille }
    
 
 ## Obtention d'un pokemon selon son id
