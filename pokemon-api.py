@@ -143,15 +143,19 @@ def create_pokemon():
 @app.route('/pokemon/<int:id>', methods=['PUT'])
 def update_pokemon(id):
     if not request.json:
+        print("Error : PUT request without request.json")
         abort(400)
     if not 'nom' in request.json or not 'type' in request.json:
+        print("Error : request.json not containing 'nom' and 'type'")
         abort(400)
 # TODO : Verifier si le fichier existe, sinon erreur 404
     filename = path+"/"+str(id)+".poke"
     if not os.path.exists(filename):
-       abort(404)
+        print("Error : pokemon file doesn't exist for this id")
+        abort(404)
     if os.path.isdir(filename):
-       abort(404)
+        print("Error : pokemon file exists for this id but this is a directory (sic)")
+        abort(404)
 
 #    if 'nom' in request.json and type(request.json['nom']) != unicode:
 #        print("nom pas unicode")
