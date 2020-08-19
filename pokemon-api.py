@@ -132,9 +132,9 @@ def create_pokemon():
     poke_file = open(file_lookup, "w")
     yaml.dump(pokemon, poke_file)
     poke_file.close()
-#    return jsonify(pokemon), 201
+    return jsonify(pokemon), 201
 # Hack pour plugin terraform pokemon api : code retour 200
-    return jsonify(pokemon), 200
+#    return jsonify(pokemon), 200
 
 
 ## TODO : Finir Page d'update
